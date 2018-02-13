@@ -11,7 +11,23 @@
     <string name="confirm_password">Confirm password</string>
     <string name="remember_user">Remember user</string>
 
+    <!--Drawer and Tabs-->
+    <string name="tab_contact">Contacts</string>
+    <string name="tab_monitoring">Monitoring</string>
+
+    <!--Drawer-->
+    <string name="drawer_account">Account</string>
+    <string name="drawer_setting">Setting</string>
+    <string name="drawer_logout">Logout</string>
+    <string name="drawer_help">Help</string>
+
+
+
+
     <!--Messages-->
     <string name="message_valid_phone">Phone number is empty, please try again.</string>
     <string name="message_valid_password">Password is empty, please try again.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

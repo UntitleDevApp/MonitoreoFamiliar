@@ -12,6 +12,16 @@
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="remember_user">Recordar usuario</string>
 
+    <!--Drawer and Tabs-->
+    <string name="tab_contact">Contactos</string>
+    <string name="tab_monitoring">Monitoreo</string>
+
+    <!--Drawer-->
+    <string name="drawer_account">Cuenta</string>
+    <string name="drawer_setting">Configuración</string>
+    <string name="drawer_logout">Cerrar sesión</string>
+    <string name="drawer_help">Ayuda</string>
+
     <!--Messages-->
     <string name="message_valid_phone">El número de teléfono está vacío. Inténtalo de nuevo.</string>
     <string name="message_valid_password">La contraseña está vacía, intente de nuevo.</string>
