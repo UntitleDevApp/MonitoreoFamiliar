@@ -10,4 +10,9 @@
     <string name="email">Email</string>
     <string name="cancel">Cancelar</string>
     <string name="confirm_password">Confirmar contraseña</string>
+    <string name="remember_user">Recordar usuario</string>
+
+    <!--Messages-->
+    <string name="message_valid_phone">El número de teléfono está vacío. Inténtalo de nuevo.</string>
+    <string name="message_valid_password">La contraseña está vacía, intente de nuevo.</string>
 </resources>

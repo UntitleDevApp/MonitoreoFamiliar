@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.untitledev.monitoreofamiliar.LoginActivity">
+    tools:context="com.untitledev.monitoreofamiliar.activities.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,12 +28,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password" />
-
+        <Switch
+            android:id="@+id/switchRemember"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/remember_user"/>
         <Button
+            android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/log_in" />
         <Button
+            android:id="@+id/btnSingUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"

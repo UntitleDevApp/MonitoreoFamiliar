@@ -26,7 +26,7 @@ public class Functions {
     /**
      * @return retorna la hora y fecha del sistema en un String.
      */
-    public String getDataTime(){
+    public static String getDataTime(){
         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
         return  currentDateTimeString;
     }
@@ -34,7 +34,7 @@ public class Functions {
     /**
      * @return la hora del sistema en un String.
      */
-    public String getHora(){
+    public static String getHora(){
         Date dt = new Date();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String formatteHour = df.format(dt.getTime());
@@ -44,7 +44,7 @@ public class Functions {
     /**
      * @return la fecha del sistema en un String.
      */
-    public String getFecha(){
+    public static String getFecha(){
         Date dt = new Date();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteFecha = df.format(dt.getTime());
@@ -55,7 +55,7 @@ public class Functions {
      * @param string se ingresa la cadena con paratentesis a remplazar por espacios en blanco.
      * @return una cadena sin parentesis.
      */
-    public String getReplaceParent(String string){
+    public static String getReplaceParent(String string){
         String data = string.replaceAll("\\(|\\)"," ");
         return data.replace(" ", "");
     }
@@ -65,7 +65,7 @@ public class Functions {
      * Checks if external storage is available for read and write
      * @return un valor verdadero o falso.
      */
-    public boolean isExternalStorageWritable() {
+    public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
@@ -76,7 +76,7 @@ public class Functions {
      * Checks if external storage is available to at least read
      * @return un valor verdadero o falso.
      */
-    public boolean isExternalStorageReadable() {
+    public static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
@@ -85,7 +85,7 @@ public class Functions {
         return false;
     }
 
-    public boolean createWriteFile(String fileName, String value, Context context){
+    public static boolean createWriteFile(String fileName, String value, Context context){
         try {
             FileOutputStream fOut = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
@@ -103,7 +103,7 @@ public class Functions {
     /**
      * @return verdadero si el directorio existe.
      */
-    public boolean directoryExists(){
+    public static boolean directoryExists(){
         String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/fiware/";
         File dir = new File(path);
         if(dir.exists()){
