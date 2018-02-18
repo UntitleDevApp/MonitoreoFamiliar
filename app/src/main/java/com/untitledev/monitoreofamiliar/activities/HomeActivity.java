@@ -38,6 +38,7 @@ public class HomeActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_contact));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_monitoring));
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -50,6 +51,11 @@ public class HomeActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 viewPager.setCurrentItem(position);
+                if(position == 0){
+                    changeDrawerMenu(position);
+                }else {
+                    changeDrawerMenu(position);
+                }
             }
 
             @Override
@@ -99,7 +105,11 @@ public class HomeActivity extends AppCompatActivity {
     private void changeFragment(Fragment fragment, MenuItem item){
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
         item.setChecked(true);
-        Log.i("Status", " Title: "+item.getTitle()+" Id: "+item.getItemId());
+        getSupportActionBar().setTitle(item.getTitle());
+    }
+    private void changeDrawerMenu(int position){
+        MenuItem item = navigationView.getMenu().getItem(position);
+        item.setChecked(true);
         getSupportActionBar().setTitle(item.getTitle());
     }
 

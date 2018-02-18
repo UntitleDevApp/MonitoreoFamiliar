@@ -5,7 +5,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:src="@drawable/mapa"
+        android:src="@drawable/drivingphone"
         android:scaleType="centerCrop"/>
 
     <TextView android:layout_width="wrap_content"
