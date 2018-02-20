@@ -15,8 +15,12 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.untitledev.monitoreofamiliar.R;
+import com.untitledev.untitledev_module.controllers.ContactController;
+import com.untitledev.untitledev_module.entities.Contact;
 import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
 import com.untitledev.untitledev_module.utilities.Constants;
+
+import java.util.List;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
@@ -25,9 +29,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etLoginPassword;
     private Switch switchRemember;
     private Button btnLogin;
-    private Button btnSingUp;
+    private Button btnSignUp;
     private ApplicationPreferences appPreferences;
-
+    private List<Contact> listContact;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
         switchRemember = (Switch) findViewById(R.id.switchRemember);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnSingUp = (Button) findViewById(R.id.btnSingUp);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
     }
 
     public void signUp(View v){
@@ -119,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     saveOnPreferences(phone, password);
                 }
                 break;
-            case R.id.btnSingUp:
+            case R.id.btnSignUp:
                 break;
         }
     }

@@ -16,12 +16,31 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by Cipriano on 28/02/2017.
  * Clase donde se agregan funciones comunes que se utilizan en una aplicación.
  */
 public class Functions {
+
+    public static String getCurrentDate(){
+        Date date = new Date();
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+        String strUTCDate = isoFormat.format(date);
+        return strUTCDate;
+    }
+
+    /*public String getDataTime(){
+
+        Date date = new Date();
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        isoFormat.setTimeZone(TimeZone.getTimeZone("CST"));
+        String strUTCDate = isoFormat.format(date);
+
+        return  strUTCDate;
+    }*/
 
     /**
      * @return retorna la hora y fecha del sistema en un String.

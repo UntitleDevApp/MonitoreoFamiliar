@@ -1,5 +1,6 @@
 package com.untitledev.monitoreofamiliar.activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -11,16 +12,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.monitoreofamiliar.adapters.PagerAdapter;
 import com.untitledev.monitoreofamiliar.fragments.ContactFragment;
 import com.untitledev.monitoreofamiliar.fragments.MonitoringFragment;
+import com.untitledev.untitledev_module.controllers.ContactController;
+import com.untitledev.untitledev_module.entities.Contact;
+
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    Fragment fragment;
+    private List<Contact> listContact;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +40,12 @@ public class HomeActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navView);
-        setFragmentDefault();
 
+
+        //Cargamos al frame por default
+        if(savedInstanceState == null) {
+            setFragmentDefault();
+        }
 
         //TabLayout
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -74,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 boolean fratmentTransaction = false;
-                Fragment fragment = null;
+                fragment = null;
                 switch (item.getItemId()){
                     case R.id.menu_contact:
                         fragment = new ContactFragment();
@@ -95,6 +108,8 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+
 
     }
 
@@ -121,13 +136,23 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
                 //Abrir el menu lateral
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
-
+            case R.id.menu_add_contact:
+                Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,16 +1,23 @@
 package com.untitledev.untitledev_module.utilities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.untitledev.untitledev_module.R;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -22,13 +29,61 @@ import java.util.List;
  * Created by Cipriano on 10/25/2017.
  */
 
-public class DevicePropertiesFunctions {
-    public DevicePropertiesFunctions(){}
+public class DeviceProperties {
+    public DeviceProperties() {
+    }
+    public static String getCountryCode(Context context){
+        String contryId = null;
+        String contryDialCode = null;
+
+        TelephonyManager telephonyMngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        contryId = telephonyMngr.getSimCountryIso().toUpperCase();
+        String[] arrContryCode=context.getResources().getStringArray(R.array.ListCountryCode);
+        for(int i=0; i<arrContryCode.length; i++){
+            String[] arrDial = arrContryCode[i].split(",");
+            if(arrDial[1].trim().equals(contryId.trim())){
+                contryDialCode = arrDial[0];
+                break;
+            }
+        }
+        return contryDialCode;
+    }
+    public static String getPhoneNumber(Context context) {
+        String numberPhone = "";
+        TelephonyManager mTelephonyManager;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<SubscriptionInfo> subscription = SubscriptionManager.from(context).getActiveSubscriptionInfoList();
+            for (int i = 0; i < subscription.size(); i++) {
+                SubscriptionInfo info = subscription.get(i);
+                Log.d("status", "number " + info.getNumber());
+                Log.d("status", "network name : " + info.getCarrierName());
+                Log.d("status", "country iso " + info.getCountryIso());
+                Log.d("status", "country number " + info.getNumber());
+            }
+        }else{
+            mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+            numberPhone = mTelephonyManager.getLine1Number();
+        }
+
+        return numberPhone;
+    }
 
     /**
      * @return la versión de la API en la que fue desarrollada la aplicación.
      */
-    public int getApiVersion() {
+    public static int getApiVersion() {
         int sdkVersion = Build.VERSION.SDK_INT;
         return sdkVersion;
     }
@@ -36,7 +91,7 @@ public class DevicePropertiesFunctions {
     /**
      * @return la versión del sistema operativo
      */
-    public String getOSVersion(){
+    public static String getOSVersion(){
         String release = Build.VERSION.RELEASE;
         return release;
     }
@@ -44,7 +99,7 @@ public class DevicePropertiesFunctions {
     /**
      * @return el serial del dispositivo movil.
      */
-    public String getSerialNumber(){
+    public static String getSerialNumber(){
         String serial = Build.SERIAL;
         return serial;
     }
@@ -52,7 +107,7 @@ public class DevicePropertiesFunctions {
     /**
      * @return  el fabricante del dispositivo movil.
      */
-    public String getManufacturer(){
+    public static String getManufacturer(){
         String factory = Build.MANUFACTURER;
         return factory;
     }
@@ -60,7 +115,7 @@ public class DevicePropertiesFunctions {
     /**
      * @return el modelo del dipositivo.
      */
-    public String getModel(){
+    public static String getModel(){
         String modelo = Build.MODEL;
         return modelo;
     }
@@ -69,7 +124,7 @@ public class DevicePropertiesFunctions {
     /**
      * @return la marca del dispositivo.
      */
-    public String getBrand(){
+    public static String getBrand(){
         String factory = Build.BRAND;
         return factory;
     }
@@ -79,7 +134,7 @@ public class DevicePropertiesFunctions {
      * @param context es el contexto de la actividad donde se ejecuta el metodo.
      * @return el nivel de bateria del dispositivo movil.
      */
-    public float getBatteryLevel(Context context){
+    public static float getBatteryLevel(Context context){
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = context.registerReceiver(null, ifilter);
         int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
@@ -89,7 +144,7 @@ public class DevicePropertiesFunctions {
         return  batteryPct*100;
     }
 
-    public String getLocalIpAddress(){
+    public static String getLocalIpAddress(){
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
                  en.hasMoreElements();) {
@@ -111,7 +166,7 @@ public class DevicePropertiesFunctions {
      * @param interfaceName por ejemplo "wlan0".
      * @return la MACAddress del dispositivo.
      */
-    public String getMACAddress(String interfaceName) {
+    public static String getMACAddress(String interfaceName) {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
@@ -134,7 +189,7 @@ public class DevicePropertiesFunctions {
      * @param useIPv4 es un valor booleano para obtener la dirección IP en este caso es "true"
      * @return la dirección Ip en el protocolo IPv4 del dispositivo movil.
      */
-    public String getIPAddress(boolean useIPv4) {
+    public static String getIPAddress(boolean useIPv4) {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
@@ -165,7 +220,7 @@ public class DevicePropertiesFunctions {
      * @param context es el contexto de la actividad donde se ejecuta el metodo.
      * @return el codigo mnc (Mobile Network Code).
      */
-    public String getmnc(Context context){
+    public static String getmnc(Context context){
         TelephonyManager tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String networkOperator = tel.getNetworkOperator();
 
@@ -179,7 +234,7 @@ public class DevicePropertiesFunctions {
      * @return el codigo mcc (Mobile Country Code).
      *
      */
-    public String getmcc(Context context){
+    public static String getmcc(Context context){
         TelephonyManager tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String networkOperator = tel.getNetworkOperator();
 
@@ -189,7 +244,7 @@ public class DevicePropertiesFunctions {
         return "";
     }
 
-    public String getAndroidId(Context context){
+    public static String getAndroidId(Context context){
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         return android_id;
     }
@@ -198,7 +253,7 @@ public class DevicePropertiesFunctions {
      * @param context es el contexto de la actividad donde se ejecuta el metodo.
      * @return Si retorna true si esta conectado y false si no lo esta...
      */
-    public boolean isNetworkAvailable(Context context){
+    public static boolean isNetworkAvailable(Context context){
         boolean band = false;
         ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -219,7 +274,7 @@ public class DevicePropertiesFunctions {
      * @param context es el contexto de la actividad donde se ejecuta el metodo.
      * @return Retorna el tipo de conexion y verifica si se encuentra conectado o no.
      */
-    public String isNetworkType(Context context){
+    public static String isNetworkType(Context context){
         String band = "DISCONNECTED";
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

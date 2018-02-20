@@ -10,6 +10,10 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_password">Confirm password</string>
     <string name="remember_user">Remember user</string>
+    <string name="country_code">Code</string>
+
+    <!---Activity AddContactActivity-->
+    <string name="accept">Accept</string>
 
     <!--Drawer and Tabs-->
     <string name="tab_contact">Contacts</string>
@@ -21,12 +25,18 @@
     <string name="drawer_logout">Logout</string>
     <string name="drawer_help">Help</string>
 
-
+    <!--Menu-->
+    <string name="menu_see_map">See on the map</string>
+    <string name="menu_delete_contact">Delete contact</string>
 
 
     <!--Messages-->
     <string name="message_valid_phone">Phone number is empty, please try again.</string>
-    <string name="message_valid_password">Password is empty, please try again.</string>
+    <string name="message_valid_password">Passwords are not the same, please try again.</string>
+    <string name="message_valid_email">Email is not valid, please try again.</string>
+    <string name="message_empty_input">The fields are required.</string>
+    <string name="message_successful_registration">Successful registration</string>
+    <string name="message_error_saving">Error saving</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

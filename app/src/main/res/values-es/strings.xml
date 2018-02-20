@@ -11,6 +11,10 @@
     <string name="cancel">Cancelar</string>
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="remember_user">Recordar usuario</string>
+    <string name="country_code">Código</string>
+
+    <!---Activity AddContactActivity-->
+    <string name="accept">Aceptar</string>
 
     <!--Drawer and Tabs-->
     <string name="tab_contact">Contactos</string>
@@ -22,7 +26,16 @@
     <string name="drawer_logout">Cerrar sesión</string>
     <string name="drawer_help">Ayuda</string>
 
+    <!--Menu-->
+    <string name="menu_see_map">Ver en el mapa</string>
+    <string name="menu_delete_contact">Eliminar contacto</string>
+
     <!--Messages-->
     <string name="message_valid_phone">El número de teléfono está vacío. Inténtalo de nuevo.</string>
-    <string name="message_valid_password">La contraseña está vacía, intente de nuevo.</string>
+    <string name="message_valid_password">Las contraseñas no son iguales, intente de nuevo.</string>
+    <string name="message_valid_email">El correo electrónico no es válido, intente de nuevo.</string>
+    <string name="message_empty_input">Los campos son requeridos.</string>
+    <string name="message_successful_registration">Registro exitoso</string>
+    <string name="message_error_saving">Error al guardar</string>
+
 </resources>

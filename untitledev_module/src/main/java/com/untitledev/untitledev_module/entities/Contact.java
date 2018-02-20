@@ -18,12 +18,13 @@ public class Contact implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private int status;
+    private int userEnable;
 
     public Contact(){
 
     }
 
-    public Contact(int id, String name, String lastName, String phone, int tblUserId, Date creationDate, Date updateDate, int status) {
+    public Contact(int id, String name, String lastName, String phone, int tblUserId, Date creationDate, Date updateDate, int status, int userEnable) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -32,6 +33,7 @@ public class Contact implements Serializable {
         this.creationDate = creationDate;
         this.updateDate = updateDate;
         this.status = status;
+        this.userEnable = userEnable;
     }
 
     public int getId() {
@@ -96,6 +98,14 @@ public class Contact implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getUserEnable() {
+        return userEnable;
+    }
+
+    public void setUserEnable(int userEnable) {
+        this.userEnable = userEnable;
     }
 
     @Override
