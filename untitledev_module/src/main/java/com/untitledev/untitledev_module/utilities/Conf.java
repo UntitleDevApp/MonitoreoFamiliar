@@ -29,6 +29,8 @@ public enum Conf {
     http_users_read("/read"),
     http_users_update("/update"),
     http_users_delete("/delete"),
+    http_users_login("/login"),
+    http_users_logout("logout"),
 
     //-----contacts--------------
     http_contacts_create("/create"),

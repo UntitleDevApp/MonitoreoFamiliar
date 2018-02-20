@@ -16,12 +16,24 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.monitoreofamiliar.adapters.ContactAdapter;
 import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
+import com.untitledev.untitledev_module.entities.User;
+import com.untitledev.untitledev_module.services.ContactsService;
+import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
+import com.untitledev.untitledev_module.utilities.Constants;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,86 +52,8 @@ public class ContactFragment extends Fragment {
 
     public ContactFragment() {
         // Required empty public constructor
-        //listContact = new ArrayList<Contact>();
-        /*listContact = new ArrayList<Contact>();
+        listContact = new ArrayList<Contact>();
 
-        contact = new Contact();
-        contact.setId(1);
-        contact.setName("Fernando");
-        contact.setLastName("Ramirez Cipriano");
-        contact.setPhone("7471054389");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(2);
-        contact.setName("Carlos");
-        contact.setLastName("Alvarez Vazquez");
-        contact.setPhone("7771045678");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(3);
-        contact.setName("Leon Alberne");
-        contact.setLastName("Torres Restrepo");
-        contact.setPhone("7771045679");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(4);
-        contact.setName("Alix");
-        contact.setLastName("Huerta Santamaria");
-        contact.setPhone("77710451909");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(5);
-        contact.setName("Alan Axel");
-        contact.setLastName("Caspeta Gomez");
-        contact.setPhone("7779098723");
-        listContact.add(contact);
-
-        //--------------
-        contact = new Contact();
-        contact.setId(6);
-        contact.setName("Carlos");
-        contact.setLastName("Alvarez Vazquez");
-        contact.setPhone("7771045678");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(7);
-        contact.setName("Leon Alberne");
-        contact.setLastName("Torres Restrepo");
-        contact.setPhone("7771045679");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(8);
-        contact.setName("Alix");
-        contact.setLastName("Huerta Santamaria");
-        contact.setPhone("77710451909");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(9);
-        contact.setName("Alan Axel");
-        contact.setLastName("Caspeta Gomez");
-        contact.setPhone("7779098723");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(10);
-        contact.setName("Alan Axel");
-        contact.setLastName("Caspeta Gomez");
-        contact.setPhone("7779098723");
-        listContact.add(contact);
-
-        contact = new Contact();
-        contact.setId(11);
-        contact.setName("Alan Axel");
-        contact.setLastName("Caspeta Gomez");
-        contact.setPhone("7779098723");
-        listContact.add(contact);*/
     }
 
 
@@ -143,13 +77,72 @@ public class ContactFragment extends Fragment {
                 Toast.makeText(getContext(), "Clicked: "+listContact.get(position), Toast.LENGTH_SHORT).show();
             }
         });*/
-        //Obtenemos todos los contactos de este determinado usuario
-       listContact = new ContactController().listAllContacts(getContext());
-       Log.i("DATA", ""+listContact.size());
+
         //Enlazamos nuestro adaptador con la vista
         contactAdapter = new ContactAdapter(getContext(), R.layout.list_contact, listContact);
         listViewContact.setAdapter(contactAdapter);
         registerForContextMenu(listViewContact);
+        //Obtenemos todos los contactos de este determinado usuario
+        ContactsService cService = new ContactsService(getContext(), new ContactsService.ContactsServiceMethods() {
+            @Override
+            public void createContact(Response response) {
+
+            }
+
+            @Override
+            public void readContact(Response response) {
+                switch (response.getHttpCode()){
+                    case 200:
+                    case 201:
+                        try {
+                            Gson gson = new Gson();
+                            listContact = new ArrayList<>();
+                            JSONObject jResponse = new JSONObject(response.getBodyString());
+                            JSONArray jaContacts = jResponse.getJSONArray("data");
+                            Contact[] items = gson.fromJson(jaContacts.toString(), Contact[].class);
+
+                            //for (int index = 0; index<jaContacts.length(); index++){
+                                //listContact.add(gson.fromJson(jaContacts.get(index).toString(), Contact.class));
+                            //}
+                            contactAdapter.addItems(Arrays.asList(items));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+                    case 204:
+                        //EMPTY
+                        break;
+                    case 404:
+                        break;
+                    default:
+                }
+            }
+
+            @Override
+            public void updateContact(Response response) {
+
+            }
+
+            @Override
+            public void deleteContact(Response response) {
+
+            }
+        });
+
+        try {
+            String sUser = new ApplicationPreferences().getPreferenceString(getContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER);
+            User mUser = (User) new Response().parseToObject(User.class, sUser);
+            Contact parameters = new Contact();
+            parameters.setTblUserId(mUser.getId());
+            cService.readContact(parameters, null, null, null);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override

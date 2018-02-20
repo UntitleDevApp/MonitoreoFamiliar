@@ -3,6 +3,7 @@ package com.untitledev.untitledev_module.services;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.untitledev.untitledev_module.entities.Contact;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,5 +77,9 @@ public class Response {
         Gson gson = new Gson();
         Log.i("JSON_gson: ", gson.toJson(arg));
         return gson.toJson(arg);
+    }
+    public Object parseToObject(Class<?> mClass, String jsonObjectString){
+        Gson gson = new Gson();
+        return gson.fromJson(jsonObjectString, mClass);
     }
 }

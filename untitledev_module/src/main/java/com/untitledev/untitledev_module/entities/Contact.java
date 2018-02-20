@@ -15,16 +15,16 @@ public class Contact implements Serializable {
     private String lastName;
     private String phone;
     private int tblUserId;
-    private Date creationDate;
-    private Date updateDate;
+    private String creationDate;
+    private String updateDate;
     private int status;
-    private int userEnable;
+    private int userEnabled;
 
     public Contact(){
 
     }
 
-    public Contact(int id, String name, String lastName, String phone, int tblUserId, Date creationDate, Date updateDate, int status, int userEnable) {
+    public Contact(int id, String name, String lastName, String phone, int tblUserId, String creationDate, String updateDate, int status, int userEnabled) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -33,7 +33,7 @@ public class Contact implements Serializable {
         this.creationDate = creationDate;
         this.updateDate = updateDate;
         this.status = status;
-        this.userEnable = userEnable;
+        this.userEnabled = userEnabled;
     }
 
     public int getId() {
@@ -76,19 +76,19 @@ public class Contact implements Serializable {
         this.tblUserId = tblUserId;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 
@@ -101,11 +101,11 @@ public class Contact implements Serializable {
     }
 
     public int getUserEnable() {
-        return userEnable;
+        return userEnabled;
     }
 
-    public void setUserEnable(int userEnable) {
-        this.userEnable = userEnable;
+    public void setUserEnable(int userEnabled) {
+        this.userEnabled = userEnabled;
     }
 
     @Override

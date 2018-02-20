@@ -14,7 +14,11 @@ import android.widget.Toast;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.untitledev_module.controllers.UserController;
 import com.untitledev.untitledev_module.entities.User;
+import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.services.UsersService;
 import com.untitledev.untitledev_module.utilities.DeviceProperties;
+
+import org.json.JSONException;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText etSignUpName;
@@ -83,12 +87,54 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     user.setPhone(phone);
                     user.setEmail(email);
                     user.setPassword(password);
-                    if(new UserController().addUser(getApplicationContext(), user)!= null){
-                        cleanFields();
-                        Toast.makeText(getApplicationContext(), R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getApplicationContext(), R.string.message_error_saving, Toast.LENGTH_SHORT).show();
+                    user.setStatus(1);
+                    UsersService uService = new UsersService(SignUpActivity.this, new UsersService.UsersServiceMethods() {
+                        @Override
+                        public void createUser(Response response) {
+                            switch (response.getHttpCode()){
+                                case 200:
+                                case 201:
+                                    cleanFields();
+                                    Toast.makeText(getApplicationContext(), R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 400:
+                                    Toast.makeText(getApplicationContext(), R.string.message_error_saving, Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                            }
+                        }
+
+                        @Override
+                        public void readUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void updateUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void deleteUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void logInUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void logOutUser(Response response) {
+
+                        }
+                    });
+                    try {
+                        uService.createUser(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
                 }

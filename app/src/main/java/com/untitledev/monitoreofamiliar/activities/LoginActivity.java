@@ -17,19 +17,21 @@ import android.widget.Toast;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
+import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.services.UsersService;
 import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
 import com.untitledev.untitledev_module.utilities.Constants;
+
+import org.json.JSONException;
 
 import java.util.List;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity{
     private Intent mIntent;
     private EditText etLoginPhone;
     private EditText etLoginPassword;
     private Switch switchRemember;
-    private Button btnLogin;
-    private Button btnSignUp;
     private ApplicationPreferences appPreferences;
     private List<Contact> listContact;
     @Override
@@ -53,7 +55,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
-        btnLogin.setOnClickListener(this);
 
     }
 
@@ -61,16 +62,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etLoginPhone = (EditText) findViewById(R.id.etLoginPhone);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
         switchRemember = (Switch) findViewById(R.id.switchRemember);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnSignUp = (Button) findViewById(R.id.btnSignUp);
     }
 
-    public void signUp(View v){
-        mIntent = new Intent(this, SignUpActivity.class);
-        startActivity(mIntent);
-    }
-
-    private boolean login(String phone, String password){
+    private boolean logIn(String phone, String password){
         if(!isValidPhone(phone)){
             Toast.makeText(getApplicationContext(), R.string.message_valid_phone, Toast.LENGTH_SHORT).show();
             return false;
@@ -112,19 +106,67 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    public void onClickLogIn(View v){
         switch(v.getId()){
             case R.id.btnLogin:
                 String phone = etLoginPhone.getText().toString();
                 String password = etLoginPassword.getText().toString();
-                if(login(phone, password)){
-                    goToHome();
-                    saveOnPreferences(phone, password);
+                if(logIn(phone, password)){
+                    UsersService uService = new UsersService(LoginActivity.this, new UsersService.UsersServiceMethods() {
+                        @Override
+                        public void createUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void readUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void updateUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void deleteUser(Response response) {
+
+                        }
+
+                        @Override
+                        public void logInUser(Response response) {
+                            switch (response.getHttpCode()){
+                                case 200:
+                                case 201:
+                                    appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER, response.getBodyString());
+                                    goToHome();
+                                    break;
+                                case 404:
+                                    break;
+                                case 400:
+                                    break;
+                                default:
+                            }
+                        }
+
+                        @Override
+                        public void logOutUser(Response response) {
+
+                        }
+                    });
+                    try {
+                        uService.logInUser(phone, password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 break;
             case R.id.btnSignUp:
+                mIntent = new Intent(this, SignUpActivity.class);
+                startActivity(mIntent);
                 break;
+            default:
         }
     }
 }

@@ -20,16 +20,11 @@ import java.util.List;
 public class ContactController {
 
     public Response addContact(Context context, Contact contact) {
-        /*String dtStart = Functions.getCurrentDate();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        try {
-            Date date = format.parse(dtStart);
-            contact.setCreationDate(date);
-            Log.i("String Date: ", ""+date);
-            contact.setCreationDate(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            contact.setCreationDate(format.format(date));
+
 
         contact.setTblUserId(2);
         contact.setStatus(1);

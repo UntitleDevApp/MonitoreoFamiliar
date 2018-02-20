@@ -100,6 +100,13 @@ public class ContactAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void addItems(List<Contact> items){
+        listContact = items;
+        this.notifyDataSetChanged();
+        for (Contact contact: items){
+
+        }
+    }
     static class ViewHolder{
         private ImageView imageViewContact;
         private TextView textViewContact;

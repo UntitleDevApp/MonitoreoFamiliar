@@ -13,6 +13,7 @@ public class Constants {
     public static final String PREFERENCE_KEY_PHONE = "phone";
     public static final String PREFERENCE_KEY_PASSWORD = "password";
     public static final String PREFERENCE_KEY_REMEMBER = "remember";
+    public static final String PREFERENCE_KEY_USER = "user";
 
     /*public static final String PREFERENCE_OFFLINE_MODE_KEY = "offline_mode";
     public static final String PREFERENCE_STATUS_OFFLINE_MODE  = "status_offline_mode";

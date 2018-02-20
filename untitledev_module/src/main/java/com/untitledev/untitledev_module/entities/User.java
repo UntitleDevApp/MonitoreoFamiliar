@@ -14,15 +14,15 @@ public class User implements Serializable{
     private String phone;
     private String email;
     private String password;
-    private Date creationDate;
-    private Date updateDate;
+    private String creationDate;
+    private String updateDate;
     private int status;
 
     public User(){
 
     }
 
-    public User(int id, String name, String lastName, String phone, String email, String password, Date creationDate, Date updateDate, int status) {
+    public User(int id, String name, String lastName, String phone, String email, String password, String creationDate, String updateDate, int status) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -82,19 +82,19 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 

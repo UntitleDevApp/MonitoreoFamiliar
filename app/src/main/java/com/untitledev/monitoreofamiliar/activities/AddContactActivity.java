@@ -17,7 +17,14 @@ import android.widget.Toast;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
+import com.untitledev.untitledev_module.entities.User;
+import com.untitledev.untitledev_module.services.ContactsService;
+import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
+import com.untitledev.untitledev_module.utilities.Constants;
 import com.untitledev.untitledev_module.utilities.Functions;
+
+import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,16 +75,61 @@ public class AddContactActivity extends AppCompatActivity implements View.OnClic
         if(isEmptyInputContact(phone, name, lastName) == true){
             Toast.makeText(getApplicationContext(), R.string.message_empty_input, Toast.LENGTH_SHORT).show();
         }else{
+            String sUser = new ApplicationPreferences().getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER);
+            User mUser = (User) new Response().parseToObject(User.class, sUser);
             Contact contact = new Contact();
             contact.setName(name);
             contact.setLastName(lastName);
             contact.setPhone(phone);
-            if(new ContactController().addContact(getApplicationContext(), contact) != null){
-                cleanFields();
-                Toast.makeText(getApplicationContext(), R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(getApplicationContext(), R.string.message_error_saving, Toast.LENGTH_SHORT).show();
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            contact.setCreationDate(format.format(date));
+            contact.setTblUserId(mUser.getId()); //ID
+            contact.setStatus(1);
+            contact.setUserEnable(0);
+
+            ContactsService cService = new ContactsService(AddContactActivity.this, new ContactsService.ContactsServiceMethods() {
+                @Override
+                public void createContact(Response response) {
+                    switch (response.getHttpCode()){
+                        case 200:
+                        case 201:
+                            cleanFields();
+                            Toast.makeText(getApplicationContext(), R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
+                            break;
+                        case 400:
+                            Toast.makeText(getApplicationContext(), R.string.message_error_saving, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                    }
+                }
+
+                @Override
+                public void readContact(Response response) {
+
+                }
+
+                @Override
+                public void updateContact(Response response) {
+
+                }
+
+                @Override
+                public void deleteContact(Response response) {
+
+                }
+            });
+            try {
+                cService.createContact(contact);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+            //if(new ContactController().addContact(getApplicationContext(), contact) != null){
+
+            //}else{
+
+            //}
         }
     }
 
