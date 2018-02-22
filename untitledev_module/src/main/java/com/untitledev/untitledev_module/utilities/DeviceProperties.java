@@ -47,11 +47,13 @@ public class DeviceProperties {
                 break;
             }
         }
+        Log.d("status", String.valueOf(Build.VERSION.SDK_INT));
         return contryDialCode;
     }
     public static String getPhoneNumber(Context context) {
         String numberPhone = "";
         TelephonyManager mTelephonyManager;
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<SubscriptionInfo> subscription = SubscriptionManager.from(context).getActiveSubscriptionInfoList();

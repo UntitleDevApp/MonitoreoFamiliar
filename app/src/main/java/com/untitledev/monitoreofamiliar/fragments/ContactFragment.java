@@ -96,7 +96,7 @@ public class ContactFragment extends Fragment {
                     case 201:
                         try {
                             Gson gson = new Gson();
-                            listContact = new ArrayList<>();
+                            //listContact = new ArrayList<>();
                             JSONObject jResponse = new JSONObject(response.getBodyString());
                             JSONArray jaContacts = jResponse.getJSONArray("data");
                             Contact[] items = gson.fromJson(jaContacts.toString(), Contact[].class);
@@ -141,8 +141,6 @@ public class ContactFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -151,7 +149,9 @@ public class ContactFragment extends Fragment {
         MenuInflater menuInflater = getActivity().getMenuInflater();
 
         AdapterView.AdapterContextMenuInfo info =  (AdapterView.AdapterContextMenuInfo) menuInfo;
-        menu.setHeaderTitle(listContact.get(info.position).getName());
+        //menu.setHeaderTitle(listContact.get(info.position).getName());
+        Contact  contact = (Contact) contactAdapter.getItem(info.position);
+        menu.setHeaderTitle(contact.getName());
         menuInflater.inflate(R.menu.contact_map_menu, menu);
     }
 }

@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
         appPreferences = new ApplicationPreferences();
         bindUI();
-        setCredentialsIfExist();
         switchRemember.setChecked(appPreferences.getPreferenceBoolean(this, Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_REMEMBER));
         switchRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -55,6 +54,8 @@ public class LoginActivity extends AppCompatActivity{
                 }
             }
         });
+
+
 
     }
 
@@ -97,13 +98,18 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    private void setCredentialsIfExist(){
-        String phone = appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE);
+    private boolean setCredentialsIfExist(){
+        if(appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER).equals("")){
+            return true;
+        }else{
+            return false;
+        }
+        /*String phone = appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE);
         String password = appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PASSWORD);
         if(!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password)){
             etLoginPhone.setText(phone);
             etLoginPassword.setText(password);
-        }
+        }*/
     }
 
     public void onClickLogIn(View v){
