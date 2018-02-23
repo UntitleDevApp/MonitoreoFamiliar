@@ -25,8 +25,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText etSignUpLastName;
     private EditText etSignUpPhone;
     private EditText etSignUpEmail;
-    private EditText etSignUpPassword;
-    private EditText etSignUpConfirmPassword;
     private EditText etSignUpCountryCode;
     private Button btnSignUp;
     private Button btnSignUpCancel;
@@ -36,8 +34,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         bindUI();
-        etSignUpPhone.setText(DeviceProperties.getPhoneNumber(this));
-        etSignUpCountryCode.setText(DeviceProperties.getCountryCode(this));
+        etSignUpPhone.setText(DeviceProperties.getPhoneNumber(getApplicationContext()));
+        etSignUpCountryCode.setText(DeviceProperties.getCountryCode(getApplicationContext()));
         btnSignUp.setOnClickListener(this);
         btnSignUpCancel.setOnClickListener(this);
 
@@ -48,15 +46,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         etSignUpLastName = (EditText) findViewById(R.id.etSignUpLastName);
         etSignUpPhone = (EditText) findViewById(R.id.etSignUpPhone);
         etSignUpEmail = (EditText) findViewById(R.id.etSignUpEmail);
-        etSignUpPassword = (EditText) findViewById(R.id.etSignUpPassword);
-        etSignUpConfirmPassword = (EditText) findViewById(R.id.etSignUpConfirmPassword);
         etSignUpCountryCode = (EditText) findViewById(R.id.etSignUpCountryCode);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         btnSignUpCancel = (Button) findViewById(R.id.btnSignUpCancel);
     }
 
-    private boolean isEmptyInputUser(String name, String lastName, String phone, String email, String password, String confirmPassword){
-        if((TextUtils.isEmpty(name) || name.length() == 0) || (TextUtils.isEmpty(lastName) || lastName.length() == 0) || (TextUtils.isEmpty(phone) || phone.length() == 0) || (TextUtils.isEmpty(email) || email.length() == 0) || (TextUtils.isEmpty(password) || password.length() == 0) || (TextUtils.isEmpty(confirmPassword) || confirmPassword.length() == 0)){
+    private boolean isEmptyInputUser(String name, String lastName, String phone, String email){
+        if((TextUtils.isEmpty(name) || name.length() == 0) || (TextUtils.isEmpty(lastName) || lastName.length() == 0) || (TextUtils.isEmpty(phone) || phone.length() == 0) || (TextUtils.isEmpty(email) || email.length() == 0)){
             Log.i("Status", "true");
             return true;
         }else{
@@ -73,20 +69,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         return password.equals(confirmPassword);
     }
 
-    private void addUser(String name, String lastName, String phone, String email, String password, String confirmPassword){
-        if(isEmptyInputUser(name, lastName, phone, email, password, confirmPassword) == true){
+    private void addUser(String name, String lastName, String phone, String email){
+        if(isEmptyInputUser(name, lastName, phone, email) == true){
             Toast.makeText(getApplicationContext(), R.string.message_empty_input, Toast.LENGTH_SHORT).show();
         }else {
             if (!isValidEmail(email)) {
                 Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
             } else {
-                if (isValidPassword(password, confirmPassword)) {
                     User user = new User();
                     user.setName(name);
                     user.setLastName(lastName);
                     user.setPhone(phone);
                     user.setEmail(email);
-                    user.setPassword(password);
                     user.setStatus(1);
                     UsersService uService = new UsersService(SignUpActivity.this, new UsersService.UsersServiceMethods() {
                         @Override
@@ -134,10 +128,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
-                }
             }
         }
     }
@@ -147,8 +137,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         etSignUpLastName.setText("");
         etSignUpPhone.setText(""+DeviceProperties.getPhoneNumber(getApplicationContext()));
         etSignUpEmail.setText("");
-        etSignUpPassword.setText("");
-        etSignUpConfirmPassword.setText("");
     }
 
     @Override
@@ -159,9 +147,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 String lastName = etSignUpLastName.getText().toString();
                 String phone = etSignUpPhone.getText().toString();
                 String email= etSignUpEmail.getText().toString();
-                String password = etSignUpPassword.getText().toString();
-                String confirmPassword = etSignUpConfirmPassword.getText().toString();
-                addUser(name, lastName, phone, email, password, confirmPassword);
+                addUser(name, lastName, phone, email);
                 break;
             case R.id.btnSignUpCancel:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

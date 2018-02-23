@@ -33,9 +33,7 @@ public class LoginActivity extends AppCompatActivity{
     private Intent mIntent;
     private EditText etLoginPhone;
     private EditText etLoginPassword;
-    private Switch switchRemember;
     private ApplicationPreferences appPreferences;
-    private List<Contact> listContact;
     private QueriesController queriesController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,29 +42,11 @@ public class LoginActivity extends AppCompatActivity{
         appPreferences = new ApplicationPreferences();
         queriesController = new QueriesController(getApplicationContext());
         bindUI();
-        switchRemember.setChecked(appPreferences.getPreferenceBoolean(this, Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_REMEMBER));
-        switchRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                appPreferences.saveOnPreferenceBoolean(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_REMEMBER, isChecked);
-                if(isChecked){
-                    Log.i("Esta chequeado: ", "true");
-                }else{
-                    //Se deben eliminar las preferencias Cuando se pongan en false
-                    appPreferences.removeSharedPreferences(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL);
-                    Log.i("No esta chequeado: ", "false");
-                }
-            }
-        });
-
-
-
     }
 
     private void bindUI(){
         etLoginPhone = (EditText) findViewById(R.id.etLoginPhone);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
-        switchRemember = (Switch) findViewById(R.id.switchRemember);
     }
 
     private boolean logIn(String phone, String password){
@@ -95,12 +75,12 @@ public class LoginActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
-    private void saveOnPreferences(String phone, String password){
+    /*private void saveOnPreferences(String phone, String password){
         if(switchRemember.isChecked()){
             appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE, phone);
             appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PASSWORD, password);
         }
-    }
+    }*/
 
     private boolean setCredentialsIfExist(){
         if(appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER).equals("")){
@@ -108,12 +88,6 @@ public class LoginActivity extends AppCompatActivity{
         }else{
             return false;
         }
-        /*String phone = appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE);
-        String password = appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PASSWORD);
-        if(!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password)){
-            etLoginPhone.setText(phone);
-            etLoginPassword.setText(password);
-        }*/
     }
 
     public void onClickLogIn(View v){

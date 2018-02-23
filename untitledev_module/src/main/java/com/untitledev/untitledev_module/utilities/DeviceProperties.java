@@ -53,16 +53,15 @@ public class DeviceProperties {
     public static String getPhoneNumber(Context context) {
         String numberPhone = "";
         TelephonyManager mTelephonyManager;
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<SubscriptionInfo> subscription = SubscriptionManager.from(context).getActiveSubscriptionInfoList();
             for (int i = 0; i < subscription.size(); i++) {
                 SubscriptionInfo info = subscription.get(i);
-                Log.d("status", "number " + info.getNumber());
-                Log.d("status", "network name : " + info.getCarrierName());
-                Log.d("status", "country iso " + info.getCountryIso());
-                Log.d("status", "country number " + info.getNumber());
+                Log.i("status", "number " + info.getNumber());
+                Log.i("status", "network name : " + info.getCarrierName());
+                Log.i("status", "country iso " + info.getCountryIso());
+                Log.i("status", "country number " + info.getNumber());
+                numberPhone = info.getNumber();
             }
         }else{
             mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -76,6 +75,7 @@ public class DeviceProperties {
                 // for ActivityCompat#requestPermissions for more details.
                 return null;
             }
+            Log.i("status", "country number ");
             numberPhone = mTelephonyManager.getLine1Number();
         }
 
