@@ -11,16 +11,20 @@ public class UserLocation implements Serializable {
     private double latitude;
     private double longitude;
     private int status;
+    private String creationDate;
+    private String updateDate;
 
     public UserLocation(){
 
     }
 
-    public UserLocation(int tblUserId, double latitude, double longitude, int status) {
+    public UserLocation(int tblUserId, double latitude, double longitude, int status, String creationDate, String updateDate) {
         this.tblUserId = tblUserId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
     }
 
     public int getTblUserId() {
@@ -53,6 +57,22 @@ public class UserLocation implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override

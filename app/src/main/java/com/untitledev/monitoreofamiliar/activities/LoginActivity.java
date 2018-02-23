@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.untitledev_module.controllers.ContactController;
+import com.untitledev.untitledev_module.controllers.QueriesController;
 import com.untitledev.untitledev_module.entities.Contact;
 import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.services.UsersService;
@@ -23,6 +24,7 @@ import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
 import com.untitledev.untitledev_module.utilities.Constants;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -34,11 +36,13 @@ public class LoginActivity extends AppCompatActivity{
     private Switch switchRemember;
     private ApplicationPreferences appPreferences;
     private List<Contact> listContact;
+    private QueriesController queriesController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         appPreferences = new ApplicationPreferences();
+        queriesController = new QueriesController(getApplicationContext());
         bindUI();
         switchRemember.setChecked(appPreferences.getPreferenceBoolean(this, Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_REMEMBER));
         switchRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -144,7 +148,19 @@ public class LoginActivity extends AppCompatActivity{
                             switch (response.getHttpCode()){
                                 case 200:
                                 case 201:
-                                    appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER, response.getBodyString());
+                                    JSONObject jsonObject = response.parseJsonObject(response.getBodyString());
+                                    try {
+                                        int id = jsonObject.getInt("id");
+                                        if(queriesController.findValidateByKeyword(""+id) == true){
+                                            Log.i("Status: ", "Ya se encuntra en la DB");
+                                        }else{
+                                            queriesController.createValidate(""+id);
+                                        }
+                                        appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER, response.getBodyString());
+                                        Log.i("id: ", ""+id);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     goToHome();
                                     break;
                                 case 404:

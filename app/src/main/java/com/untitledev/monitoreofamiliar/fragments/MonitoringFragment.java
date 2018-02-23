@@ -31,13 +31,24 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.monitoreofamiliar.activities.HomeActivity;
+import com.untitledev.untitledev_module.controllers.QueriesController;
+import com.untitledev.untitledev_module.entities.UserLocation;
+import com.untitledev.untitledev_module.services.UsersLocationService;
+import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
+import com.untitledev.untitledev_module.utilities.Constants;
+import com.untitledev.untitledev_module.httpmethods.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MonitoringFragment extends Fragment implements OnMapReadyCallback{
+public class MonitoringFragment extends Fragment implements OnMapReadyCallback, UsersLocationService.UsersLocationServiceMethods{
     private View rootView;
     private MapView mapView;
     private GoogleMap gMap;
@@ -49,10 +60,31 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback{
     private CameraPosition camera;
     private static final String STATUS = "Status";
     Context context;
-
+    private ApplicationPreferences appPreferences;
+    private String json;
+    private JSONObject jsonObject;
+    private Response mResponse;
+    private QueriesController queriesController;
+    private String keyword;
+    private  int id;
+    private boolean userExists;
+    private UserLocation userLocation;
+    private UsersLocationService uLocationservice;
     public MonitoringFragment() {
         // Required empty public constructor
         context = HomeActivity.CONTEXT_MAIN;
+        appPreferences = new ApplicationPreferences();
+        queriesController = new QueriesController(context);
+        mResponse = new Response();
+        json = appPreferences.getPreferenceString(context, Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER);
+        jsonObject = mResponse.parseJsonObject(json);
+        try {
+            id = jsonObject.getInt("id");
+            keyword = String.valueOf(id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        uLocationservice = new UsersLocationService(context, this);
         locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -160,9 +192,24 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback{
 
             if (location != null) {
                 Log.i(STATUS, "Test Status GPS Latitude: "+latitudeGPS+" - Longitude: "+longitudeGPS);
+                if(queriesController.findValidateByKeywordAndStatusInactive(keyword) == true){
+                    userExists = false;
+                    userLocation = createUserLocation(id, latitudeGPS, longitudeGPS);
+                    try {
+                        uLocationservice.createUserLocation(userLocation);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    Log.i("Status: ", "userExists: "+userExists);
+                    userExists = true;
+                }
+
                 //gMap.addMarker(new MarkerOptions().position(new LatLng(latitudeGPS, longitudeGPS)).draggable(true));
-                createOrUpdateMarkerByLocation(latitudeGPS, longitudeGPS);
-                zoomToLocation(latitudeGPS, longitudeGPS);
+                //createOrUpdateMarkerByLocation(latitudeGPS, longitudeGPS);
+                //zoomToLocation(latitudeGPS, longitudeGPS);
+                    createOrUpdateMarkerByLocation(latitudeNetwork, longitudeNetwork);
+                    zoomToLocation(latitudeNetwork, longitudeNetwork);
             } else {
                 Log.i(STATUS, "Error GPS...!");
                 //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
@@ -193,9 +240,22 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback{
 
             if (location != null) {
                 Log.i(STATUS, "Test Status Network Latitude: "+latitudeNetwork+" - Longitude"+longitudeNetwork);
+                if(queriesController.findValidateByKeywordAndStatusInactive(keyword) == true){
+                    userExists = false;
+                    userLocation = createUserLocation(id, latitudeNetwork, longitudeNetwork);
+                    try {
+                        uLocationservice.createUserLocation(userLocation);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    Log.i("Status: ", "userExists: "+userExists);
+                    userExists = true;
+                }
                 //gMap.addMarker(new MarkerOptions().position(new LatLng(latitudeGPS, longitudeGPS)).draggable(true));
-                createOrUpdateMarkerByLocation(latitudeNetwork, longitudeNetwork);
-                zoomToLocation(latitudeNetwork, longitudeNetwork);
+                    createOrUpdateMarkerByLocation(latitudeNetwork, longitudeNetwork);
+                    zoomToLocation(latitudeNetwork, longitudeNetwork);
+
             } else {
                 Log.i(STATUS, "Error GPS...!");
                 //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
@@ -217,4 +277,48 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback{
 
         }
     };
+
+    private UserLocation createUserLocation(int tblUserId, double latitude, double longitude){
+        UserLocation userLocation = new UserLocation();
+        userLocation.setTblUserId(tblUserId);
+        userLocation.setLatitude(latitude);
+        userLocation.setLongitude(longitude);
+        userLocation.setStatus(1);
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        userLocation.setCreationDate(format.format(date));
+        return userLocation;
+    }
+    @Override
+    public void createUserLocation(Response response) {
+        Log.i(STATUS, "createUserLocation: "+response.getHttpCode());
+        switch (response.getHttpCode()){
+            case 200:
+            case 201:
+                queriesController.updateValidateStatusActive(keyword);
+                Log.i(STATUS, "Create: "+response.getHttpCode());
+                //Toast.makeText(context, R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
+                break;
+            case 400:
+                Log.i(STATUS, "Error create: "+response.getHttpCode());
+                //Toast.makeText(context, R.string.message_error_saving, Toast.LENGTH_SHORT).show();
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public void readUserLocation(Response response) {
+
+    }
+
+    @Override
+    public void updateUserLocation(Response response) {
+
+    }
+
+    @Override
+    public void deleteUserLocation(Response response) {
+
+    }
 }
