@@ -23,7 +23,7 @@ import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
 import com.untitledev.untitledev_module.entities.User;
 import com.untitledev.untitledev_module.services.ContactsService;
-import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
 import com.untitledev.untitledev_module.utilities.Constants;
 

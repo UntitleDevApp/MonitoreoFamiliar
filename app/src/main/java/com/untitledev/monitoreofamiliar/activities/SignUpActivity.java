@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.untitledev_module.controllers.UserController;
 import com.untitledev.untitledev_module.entities.User;
-import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.services.UsersService;
 import com.untitledev.untitledev_module.utilities.DeviceProperties;
 

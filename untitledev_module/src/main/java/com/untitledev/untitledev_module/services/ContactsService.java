@@ -6,8 +6,9 @@ import com.google.gson.Gson;
 import com.untitledev.untitledev_module.entities.Contact;
 import com.untitledev.untitledev_module.entities.User;
 import com.untitledev.untitledev_module.utilities.Conf;
-import com.untitledev.untitledev_module.volleymethods.MethodGET;
-import com.untitledev.untitledev_module.volleymethods.MethodPOST;
+import com.untitledev.untitledev_module.httpmethods.methods.MethodGET;
+import com.untitledev.untitledev_module.httpmethods.methods.MethodPOST;
+import com.untitledev.untitledev_module.httpmethods.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ import java.util.Iterator;
  */
 
 public class ContactsService implements MethodPOST.MethodPOSTCallback, MethodGET.MethodGETCallback {
-    private static String URL_BASE = Conf.http_host.getPropiedad() + Conf.http_contacts.getPropiedad();
+    private static String URL_BASE = Conf.http_contacts.getPropiedad();
     private final ContactsServiceMethods cServiceMethods;
     private final Context context;
     private String method;
@@ -72,9 +73,8 @@ public class ContactsService implements MethodPOST.MethodPOSTCallback, MethodGET
     public void createContact(Contact contact) throws JSONException {
         method = "createContact";
         String URL = URL_BASE + Conf.http_contacts_create.getPropiedad();
-        JSONObject jObject = new JSONObject(new Gson().toJson(contact));
         mPOST = new MethodPOST(this);
-        mPOST.request(this.context, URL, jObject);
+        mPOST.execute(URL, new Gson().toJson(contact));
     }
     public void readContact(Contact contact, String page, String pagination, String orderBy ) throws UnsupportedEncodingException, JSONException {
         method = "readContact";
@@ -86,21 +86,20 @@ public class ContactsService implements MethodPOST.MethodPOSTCallback, MethodGET
         if (orderBy!=null && !orderBy.isEmpty())
             URL += "/orderBy="+orderBy;
         mGET = new MethodGET(this);
-        mGET.request(this.context, URL);
+        mGET.execute(URL);
 
     }
     public void updateContact(Contact contact) throws JSONException {
         method = "updateContact";
         String URL = URL_BASE + Conf.http_contacts_update.getPropiedad() + "/" + contact.getId();
-        JSONObject jObject = new JSONObject(new Gson().toJson(contact));
         mPOST = new MethodPOST(this);
-        mPOST.request(this.context, URL, jObject);
+        mPOST.execute(URL, new Gson().toJson(contact));
     }
     public void deleteContact(Contact contact) throws JSONException {
         method = "updateContact";
         String URL = URL_BASE + Conf.http_contacts_delete.getPropiedad() + "/" + contact.getId();
         mGET = new MethodGET(this);
-        mGET.request(this.context, URL);
+        mGET.execute(URL);
     }
 
     public String getParameters(Contact contact) throws JSONException, UnsupportedEncodingException {

@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //Cargamos al frame por default
         if(savedInstanceState == null) {
-            setFragmentDefault();
+            //setFragmentDefault();
         }
 
         //TabLayout

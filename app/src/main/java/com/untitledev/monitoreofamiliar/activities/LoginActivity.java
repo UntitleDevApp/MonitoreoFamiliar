@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
-import com.untitledev.untitledev_module.services.Response;
+import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.services.UsersService;
 import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
 import com.untitledev.untitledev_module.utilities.Constants;
