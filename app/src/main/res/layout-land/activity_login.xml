@@ -38,7 +38,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword">
+                <requestFocus></requestFocus>
+            </EditText>
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"

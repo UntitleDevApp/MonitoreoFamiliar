@@ -97,9 +97,9 @@ public class HomeActivity extends AppCompatActivity {
                         fratmentTransaction = true;
                         break;
                     case R.id.menu_monitoring:
-                        fragment = new MonitoringFragment();
-                        viewPager.setCurrentItem(1);
-                        fratmentTransaction = true;
+                        //fragment = new MonitoringFragment();
+                        //viewPager.setCurrentItem(1);
+                        //fratmentTransaction = true;
                         break;
                 }
 
