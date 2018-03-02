@@ -27,8 +27,11 @@ import java.util.TimeZone;
  * Clase donde se agregan funciones comunes que se utilizan en una aplicación.
  */
 public class Functions {
-
-
+    public static boolean isEmptyString(String str){
+        if (str==null || str.length()==0 || str.trim().length()==0)
+            return true;
+        return false;
+    }
     public static String getCurrentDate(){
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());

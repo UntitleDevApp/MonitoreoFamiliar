@@ -78,11 +78,11 @@ public class UsersService implements MethodPOST.MethodPOSTCallback, MethodGET.Me
         this.context = context;
     }
 
-    public void logInUser(String email, String password) throws JSONException {
+    public void logInUser(String phone, String password) throws JSONException {
         method = "logInUser";
         String URL = URL_BASE + Conf.http_users_login.getPropiedad();
         JSONObject jsonLogInUser = new JSONObject();
-        jsonLogInUser.put("email", email);
+        jsonLogInUser.put("phone", phone);
         jsonLogInUser.put("password", password);
         mPOST = new MethodPOST(this);
         mPOST.execute(URL, jsonLogInUser.toString());

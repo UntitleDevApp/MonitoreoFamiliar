@@ -1,6 +1,7 @@
 package com.untitledev.untitledev_module.httpmethods.methods;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.utilities.Conf;
@@ -35,6 +36,9 @@ public class MethodPOST extends AsyncTask<String, String, Response> {
     protected Response doInBackground(String... vars) {
         String sURL = vars[0];
         String mBody = vars[1];
+        Log.i("Monitoreo Method POST", sURL);
+        Log.i("Monitoreo Method POST", mBody);
+
         HttpURLConnection hURLConnection = null;
         Response mResponse = new Response();
         try {
@@ -55,6 +59,8 @@ public class MethodPOST extends AsyncTask<String, String, Response> {
             dOutputStream.writeBytes(mBody);
             dOutputStream.flush();
             mResponse.setHttpCode(hURLConnection.getResponseCode());
+            Log.i("Monitoreo Method POST", "Status code: " + mResponse.getHttpCode());
+
             if (mResponse.getHttpCode()==201) {
                 try {
                     BufferedReader bReader = new BufferedReader(new InputStreamReader(hURLConnection.getInputStream()));

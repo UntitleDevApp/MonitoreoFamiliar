@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity{
     private EditText etLoginPassword;
     private ApplicationPreferences appPreferences;
     private QueriesController queriesController;
+    private String phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,9 @@ public class LoginActivity extends AppCompatActivity{
         appPreferences = new ApplicationPreferences();
         queriesController = new QueriesController(getApplicationContext());
         bindUI();
+        mIntent = this.getIntent();
+        phone = mIntent.getStringExtra("phone");
+        etLoginPhone.setText(phone);
     }
 
     private void bindUI(){

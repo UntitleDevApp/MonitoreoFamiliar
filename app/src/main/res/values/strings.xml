@@ -40,4 +40,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message_duplicate">The phone number you have entered is already registered, try another please</string>
+    <string name="have_code">I have a code</string>
 </resources>

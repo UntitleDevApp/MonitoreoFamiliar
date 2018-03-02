@@ -1,6 +1,7 @@
 package com.untitledev.untitledev_module.httpmethods.methods;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.utilities.Conf;
@@ -28,6 +29,7 @@ public class MethodGET extends AsyncTask<String, String, Response> {
     @Override
     protected Response doInBackground(String... vars) {
         String sURL = vars[0];
+        Log.i("Monitoreo Method GET", sURL);
         HttpURLConnection hURLConnection = null;
         Response mResponse = new Response();
         try {
@@ -50,6 +52,8 @@ public class MethodGET extends AsyncTask<String, String, Response> {
             bReader.close();
             mResponse.setHttpCode(hURLConnection.getResponseCode());
             mResponse.setBodyString(sBuilder.toString());
+
+            Log.i("Monitoreo Method GET", "Status code: " + mResponse.getHttpCode());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
