@@ -43,9 +43,10 @@ public class LoginActivity extends AppCompatActivity{
         appPreferences = new ApplicationPreferences();
         queriesController = new QueriesController(getApplicationContext());
         bindUI();
-        mIntent = this.getIntent();
-        phone = mIntent.getStringExtra("phone");
-        etLoginPhone.setText(phone);
+        //mIntent = this.getIntent();
+        //phone = mIntent.getStringExtra("phone");
+
+        etLoginPhone.setText(appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE));
     }
 
     private void bindUI(){
@@ -78,13 +79,6 @@ public class LoginActivity extends AppCompatActivity{
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
-    /*private void saveOnPreferences(String phone, String password){
-        if(switchRemember.isChecked()){
-            appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE, phone);
-            appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PASSWORD, password);
-        }
-    }*/
 
     private boolean setCredentialsIfExist(){
         if(appPreferences.getPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER).equals("")){
@@ -126,19 +120,7 @@ public class LoginActivity extends AppCompatActivity{
                             switch (response.getHttpCode()){
                                 case 200:
                                 case 201:
-                                    JSONObject jsonObject = response.parseJsonObject(response.getBodyString());
-                                    try {
-                                        int id = jsonObject.getInt("id");
-                                        if(queriesController.findValidateByKeyword(""+id) == true){
-                                            Log.i("Status: ", "Ya se encuntra en la DB");
-                                        }else{
-                                            queriesController.createValidate(""+id);
-                                        }
-                                        appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER, response.getBodyString());
-                                        Log.i("id: ", ""+id);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER, response.getBodyString());
                                     goToHome();
                                     break;
                                 case 404:

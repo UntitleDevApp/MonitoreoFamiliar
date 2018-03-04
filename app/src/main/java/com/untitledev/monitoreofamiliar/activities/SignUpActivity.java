@@ -28,6 +28,8 @@ import com.untitledev.untitledev_module.controllers.UserController;
 import com.untitledev.untitledev_module.entities.User;
 import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.services.UsersService;
+import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
+import com.untitledev.untitledev_module.utilities.Constants;
 import com.untitledev.untitledev_module.utilities.DeviceProperties;
 import com.untitledev.untitledev_module.utilities.Functions;
 
@@ -45,12 +47,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private ImageButton ibPhone;
     private Intent mIntent;
     private GoogleApiClient mGoogleApiClient;
+    private ApplicationPreferences appPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         bindUI();
+        appPreferences = new ApplicationPreferences();
         etSignUpPhone.setText(DeviceProperties.getPhoneNumber(getApplicationContext()));
         //etSignUpCountryCode.setText(DeviceProperties.getCountryCode(getApplicationContext()));
         btnSignUp.setOnClickListener(this);
@@ -93,7 +97,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         return password.equals(confirmPassword);
     }
 
-    private void addUser(String name, String lastName, String phone, String email){
+    private void addUser(String name, String lastName, final String phone, String email){
         if(isEmptyInputUser(name, lastName, phone, email) == true){
             Toast.makeText(getApplicationContext(), R.string.message_empty_input, Toast.LENGTH_SHORT).show();
         }else {
@@ -113,6 +117,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 case 200:
                                 case 201:
                                     cleanFields();
+                                    appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_PHONE, phone);
                                     Toast.makeText(getApplicationContext(), R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
                                     break;
                                 case 400:
@@ -162,7 +167,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void cleanFields(){
         etSignUpName.setText("");
         etSignUpLastName.setText("");
-        etSignUpPhone.setText(""+DeviceProperties.getPhoneNumber(getApplicationContext()));
+        //etSignUpPhone.setText(""+DeviceProperties.getPhoneNumber(getApplicationContext()));
         etSignUpEmail.setText("");
     }
 
@@ -223,7 +228,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.btnSignUpCancel:
                     mIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                    mIntent.putExtra("phone", phone);
+                    //mIntent.putExtra("phone", phone);
                     startActivity(mIntent);
                     this.finish();
                     break;
