@@ -39,5 +39,6 @@
     <string name="message_error_saving">Error al guardar</string>
     <string name="message_duplicate">"El número de teléfono utilizado ya ha sido registrado, intenta otro por favor "</string>
     <string name="have_code">Tengo un código</string>
+    <string name="message_delete">Eliminado...!</string>
 
 </resources>

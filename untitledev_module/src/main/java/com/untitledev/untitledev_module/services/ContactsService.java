@@ -48,7 +48,7 @@ public class ContactsService implements MethodPOST.MethodPOSTCallback, MethodGET
             case "readContact":
                 cServiceMethods.readContact(response);
                 break;
-            case "deleteUser":
+            case "deleteContact":
                 cServiceMethods.deleteContact(response);
                 break;
             default:
@@ -96,7 +96,7 @@ public class ContactsService implements MethodPOST.MethodPOSTCallback, MethodGET
         mPOST.execute(URL, new Gson().toJson(contact));
     }
     public void deleteContact(Contact contact) throws JSONException {
-        method = "updateContact";
+        method = "deleteContact";
         String URL = URL_BASE + Conf.http_contacts_delete.getPropiedad() + "/" + contact.getId();
         mGET = new MethodGET(this);
         mGET.execute(URL);

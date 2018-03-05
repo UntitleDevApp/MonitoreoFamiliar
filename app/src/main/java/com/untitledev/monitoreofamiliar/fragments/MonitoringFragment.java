@@ -2,9 +2,11 @@ package com.untitledev.monitoreofamiliar.fragments;
 
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,6 +16,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,49 +51,24 @@ import static android.content.Context.LOCATION_SERVICE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MonitoringFragment extends Fragment implements OnMapReadyCallback, UsersLocationService.UsersLocationServiceMethods{
+public class MonitoringFragment extends Fragment implements OnMapReadyCallback{
     private View rootView;
     private MapView mapView;
     private GoogleMap gMap;
-    private LocationManager locationManager;
-    private double longitudeGPS, latitudeGPS;
-    private double longitudeNetwork, latitudeNetwork;
-    private Location currentLocation;
     private Marker marker;
     private CameraPosition camera;
     private static final String STATUS = "Status";
-    Context context;
-    private ApplicationPreferences appPreferences;
-    private String json;
-    private JSONObject jsonObject;
-    private Response mResponse;
-    private QueriesController queriesController;
-    private String keyword;
-    private  int id;
-    private boolean userExists;
-    private UserLocation userLocation;
-    private UsersLocationService uLocationservice;
+    private Context context;
+    private double latitude, longitude;
+    private IntentFilter filter;
     public MonitoringFragment() {
         // Required empty public constructor
         context = HomeActivity.CONTEXT_MAIN;
-        appPreferences = new ApplicationPreferences();
-        queriesController = new QueriesController(context);
-        mResponse = new Response();
-        json = appPreferences.getPreferenceString(context, Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER);
-        jsonObject = mResponse.parseJsonObject(json);
-        try {
-            id = jsonObject.getInt("id");
-            keyword = String.valueOf(id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        uLocationservice = new UsersLocationService(context, this);
-        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGPS);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+        filter = new IntentFilter(Constants.SERVICE_CHANGE_LOCATION_DEVICE);
+        ResponseReceiver receiver = new ResponseReceiver();
+        // Registrar el receiver y su filtro
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
     }
 
 
@@ -119,14 +97,13 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        //locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        /*if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         gMap.setMyLocationEnabled(true);
         //Ocultar el boton
-        gMap.getUiSettings().setMyLocationButtonEnabled(false);
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);*/
     }
 
     private boolean isGPSEnabled(){
@@ -167,6 +144,7 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback, 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude){
         if(marker == null){
             marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
+            zoomToLocation(latitude, longitude);
         }else{
             marker.setPosition(new LatLng(latitude, longitude));
         }
@@ -183,101 +161,6 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback, 
     }
 
 
-    private final LocationListener locationListenerGPS = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            longitudeGPS = (double)location.getLongitude();
-            latitudeGPS = (double)location.getLatitude();
-
-            if (location != null) {
-                Log.i(STATUS, "Test Status GPS Latitude: "+latitudeGPS+" - Longitude: "+longitudeGPS);
-                if(queriesController.findValidateByKeywordAndStatusInactive(keyword) == true){
-                    userExists = false;
-                    userLocation = createUserLocation(id, latitudeGPS, longitudeGPS);
-                    try {
-                        uLocationservice.createUserLocation(userLocation);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    Log.i("Status: ", "userExists: "+userExists);
-                    userExists = true;
-                }
-
-                //gMap.addMarker(new MarkerOptions().position(new LatLng(latitudeGPS, longitudeGPS)).draggable(true));
-                //createOrUpdateMarkerByLocation(latitudeGPS, longitudeGPS);
-                //zoomToLocation(latitudeGPS, longitudeGPS);
-                    createOrUpdateMarkerByLocation(latitudeNetwork, longitudeNetwork);
-                    zoomToLocation(latitudeNetwork, longitudeNetwork);
-            } else {
-                Log.i(STATUS, "Error GPS...!");
-                //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
-    private final LocationListener locationListenerNetwork = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            longitudeNetwork = (double)location.getLongitude();
-            latitudeNetwork = (double)location.getLatitude();
-
-            if (location != null) {
-                Log.i(STATUS, "Test Status Network Latitude: "+latitudeNetwork+" - Longitude"+longitudeNetwork);
-                if(queriesController.findValidateByKeywordAndStatusInactive(keyword) == true){
-                    userExists = false;
-                    userLocation = createUserLocation(id, latitudeNetwork, longitudeNetwork);
-                    try {
-                        uLocationservice.createUserLocation(userLocation);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    Log.i("Status: ", "userExists: "+userExists);
-                    userExists = true;
-                }
-                //gMap.addMarker(new MarkerOptions().position(new LatLng(latitudeGPS, longitudeGPS)).draggable(true));
-                    createOrUpdateMarkerByLocation(latitudeNetwork, longitudeNetwork);
-                    zoomToLocation(latitudeNetwork, longitudeNetwork);
-
-            } else {
-                Log.i(STATUS, "Error GPS...!");
-                //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
-
     private UserLocation createUserLocation(int tblUserId, double latitude, double longitude){
         UserLocation userLocation = new UserLocation();
         userLocation.setTblUserId(tblUserId);
@@ -289,36 +172,21 @@ public class MonitoringFragment extends Fragment implements OnMapReadyCallback, 
         userLocation.setCreationDate(format.format(date));
         return userLocation;
     }
-    @Override
-    public void createUserLocation(Response response) {
-        Log.i(STATUS, "createUserLocation: "+response.getHttpCode());
-        switch (response.getHttpCode()){
-            case 200:
-            case 201:
-                queriesController.updateValidateStatusActive(keyword);
-                Log.i(STATUS, "Create: "+response.getHttpCode());
-                //Toast.makeText(context, R.string.message_successful_registration, Toast.LENGTH_SHORT).show();
-                break;
-            case 400:
-                Log.i(STATUS, "Error create: "+response.getHttpCode());
-                //Toast.makeText(context, R.string.message_error_saving, Toast.LENGTH_SHORT).show();
-                break;
-            default:
+
+    class ResponseReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case Constants.SERVICE_CHANGE_LOCATION_DEVICE:
+                    latitude = intent.getDoubleExtra(Constants.SERVICE_RESULT_LATITUDE, 0);
+                    longitude = intent.getDoubleExtra(Constants.SERVICE_RESULT_LONGITUDE, 0);
+                    createOrUpdateMarkerByLocation(latitude, longitude);
+                    //zoomToLocation(latitude, longitude);
+                    Log.i(STATUS, "VIEW Latitude: "+latitude+" Longitude: "+longitude);
+                    break;
+            }
         }
     }
 
-    @Override
-    public void readUserLocation(Response response) {
-
-    }
-
-    @Override
-    public void updateUserLocation(Response response) {
-
-    }
-
-    @Override
-    public void deleteUserLocation(Response response) {
-
-    }
 }

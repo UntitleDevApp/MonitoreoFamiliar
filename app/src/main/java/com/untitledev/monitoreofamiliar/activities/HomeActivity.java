@@ -16,13 +16,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.untitledev.monitoreofamiliar.R;
 import com.untitledev.monitoreofamiliar.adapters.PagerAdapter;
 import com.untitledev.monitoreofamiliar.fragments.ContactFragment;
 import com.untitledev.monitoreofamiliar.fragments.MonitoringFragment;
+import com.untitledev.monitoreofamiliar.services.DeviceService;
 import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
+import com.untitledev.untitledev_module.httpmethods.Response;
+import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
+import com.untitledev.untitledev_module.utilities.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -32,17 +40,34 @@ public class HomeActivity extends AppCompatActivity {
     Fragment fragment;
     private List<Contact> listContact;
     public static Context CONTEXT_MAIN = null;
+    public static int ID = 0;
+    public static String NAME = "";
+    private ApplicationPreferences appPreferences;
+    private Response mResponse;
+    private String json;
+    private JSONObject jsonObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         CONTEXT_MAIN = HomeActivity.this;
+        appPreferences = new ApplicationPreferences();
+        mResponse = new Response();
+        json = appPreferences.getPreferenceString(CONTEXT_MAIN, Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER);
+        jsonObject = mResponse.parseJsonObject(json);
+        try {
+            ID = jsonObject.getInt("id");
+            NAME = jsonObject.getString("name");
+            Log.i("ID", ""+ID+" NAME:"+NAME);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         //Mandar a llamar el toolbar una vez generado en el activity_main de la actividad
         setToolbar();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navView);
-
 
         //Cargamos al frame por default
         if(savedInstanceState == null) {
@@ -97,9 +122,9 @@ public class HomeActivity extends AppCompatActivity {
                         fratmentTransaction = true;
                         break;
                     case R.id.menu_monitoring:
-                        //fragment = new MonitoringFragment();
-                        //viewPager.setCurrentItem(1);
-                        //fratmentTransaction = true;
+                        fragment = new MonitoringFragment();
+                        viewPager.setCurrentItem(1);
+                        fratmentTransaction = true;
                         break;
                 }
 
@@ -110,9 +135,9 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
+        //Inicia el servicio para la captura de la posición.
+        Intent deviceService = new Intent(CONTEXT_MAIN, DeviceService.class);
+        startService(deviceService);
     }
 
     private void setFragmentDefault(){

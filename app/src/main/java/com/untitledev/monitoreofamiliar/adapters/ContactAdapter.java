@@ -51,36 +51,6 @@ public class ContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        //View Holder Pattern : nos permite aumentar la productividad
-        /*ViewHolder holder;
-        int i = 0;
-        if(convertView == null){
-            LayoutInflater layoutInflater = LayoutInflater.from(this.context);
-            convertView = layoutInflater.inflate(this.layout, null);
-            //convertView = layoutInflater.inflate(this.layout,parent,false);
-
-            holder = new ViewHolder();
-            //Referenciamos el elemento a modificar y lo rellenamos.
-            holder.imageViewContact = (ImageView) convertView.findViewById(R.id.imageViewContact);
-            holder.textViewContact = (TextView) convertView.findViewById(R.id.textViewContact);
-            holder.switchPermission = (Switch) convertView.findViewById(R.id.switchPermission);
-
-            holder.switchPermission.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Toast.makeText(ContactAdapter.this.context, "Hola" + isChecked, Toast.LENGTH_SHORT).show();
-                }
-            });
-            convertView.setTag(holder);
-        }else{
-            Log.i("Status", "Entro holder");
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        //Nos traemos el valor dependiente de la posición
-        Contact currentContact = listContact.get(position);
-        holder.textViewContact.setText(""+currentContact.getId()+" - "+currentContact.getName()+" "+currentContact.getLastName()+" - "+currentContact.getPhone());
-        */
         LayoutInflater layoutInflater = LayoutInflater.from(this.context);
         convertView = layoutInflater.inflate(this.layout, null);
 
@@ -101,11 +71,16 @@ public class ContactAdapter extends BaseAdapter {
     }
 
     public void addItems(List<Contact> items){
-        listContact = items;
+        //listContact = items;
         this.notifyDataSetChanged();
         for (Contact contact: items){
-
+            listContact.add(contact);
         }
+    }
+
+    public void removeItem(int position){
+        listContact.remove(position);
+        this.notifyDataSetChanged();
     }
     static class ViewHolder{
         private ImageView imageViewContact;

@@ -11,10 +11,12 @@ public class Constants {
     //CONSTANTES PARA LAS CONFIGURACIONES DE LAS PREFERENCIAS DEL DISPOSITIVO...
     public static final String PREFERENCE_NAME_GENERAL = "preference_name_general";
     public static final String PREFERENCE_KEY_PHONE = "phone";
-    public static final String PREFERENCE_KEY_PASSWORD = "password";
-    public static final String PREFERENCE_KEY_REMEMBER = "remember";
     public static final String PREFERENCE_KEY_USER = "user";
 
+    //CONSTANTES PARA LOS Intent DE LOS SERVICIOS DE LOS SENSORES
+    public static final String SERVICE_CHANGE_LOCATION_DEVICE = "service_change_location_device";
+    public static final String SERVICE_RESULT_LATITUDE = "latitude";
+    public static final String SERVICE_RESULT_LONGITUDE = "longitude";
     /*public static final String PREFERENCE_OFFLINE_MODE_KEY = "offline_mode";
     public static final String PREFERENCE_STATUS_OFFLINE_MODE  = "status_offline_mode";
     public static final String PREFERENCE_MOBILE_DATA_KEY = "mobile_data";

@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import com.untitledev.monitoreofamiliar.adapters.ContactAdapter;
 import com.untitledev.untitledev_module.controllers.ContactController;
 import com.untitledev.untitledev_module.entities.Contact;
 import com.untitledev.untitledev_module.entities.User;
+import com.untitledev.untitledev_module.services.ContactService;
 import com.untitledev.untitledev_module.services.ContactsService;
 import com.untitledev.untitledev_module.httpmethods.Response;
 import com.untitledev.untitledev_module.utilities.ApplicationPreferences;
@@ -39,13 +42,14 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContactFragment extends Fragment {
+public class ContactFragment extends Fragment implements ContactsService.ContactsServiceMethods{
     private ListView listViewContact;
     private List<Contact> listContact;
     private Contact contact;
     private View view;
     private ContactAdapter contactAdapter;
-
+    private ContactsService cService;
+    private AdapterView.AdapterContextMenuInfo info;
 
     //private List<String> listNames;
     //private View view;
@@ -53,7 +57,7 @@ public class ContactFragment extends Fragment {
     public ContactFragment() {
         // Required empty public constructor
         listContact = new ArrayList<Contact>();
-
+        cService = new ContactsService(getContext(), this);
     }
 
 
@@ -100,7 +104,6 @@ public class ContactFragment extends Fragment {
                             JSONObject jResponse = new JSONObject(response.getBodyString());
                             JSONArray jaContacts = jResponse.getJSONArray("data");
                             Contact[] items = gson.fromJson(jaContacts.toString(), Contact[].class);
-
                             //for (int index = 0; index<jaContacts.length(); index++){
                                 //listContact.add(gson.fromJson(jaContacts.get(index).toString(), Contact.class));
                             //}
@@ -144,6 +147,28 @@ public class ContactFragment extends Fragment {
     }
 
     @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_see_map:
+                //contactAdapter.removeItem(0);
+                Toast.makeText(getContext(), "See Map", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_delete_contact:
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                Contact  contactPosition = (Contact) contactAdapter.getItem(info.position);
+                contact = new Contact();
+                contact.setId(contactPosition.getId());
+                try {
+                    cService.deleteContact(contact);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater menuInflater = getActivity().getMenuInflater();
@@ -153,5 +178,29 @@ public class ContactFragment extends Fragment {
         Contact  contact = (Contact) contactAdapter.getItem(info.position);
         menu.setHeaderTitle(contact.getName());
         menuInflater.inflate(R.menu.contact_map_menu, menu);
+    }
+
+    @Override
+    public void createContact(Response response) {
+
+    }
+
+    @Override
+    public void readContact(Response response) {
+
+    }
+
+    @Override
+    public void updateContact(Response response) {
+
+    }
+
+    @Override
+    public void deleteContact(Response response) {
+        if(response.getHttpCode()==200){
+            contactAdapter.removeItem(info.position);
+            Toast.makeText(getContext(), R.string.message_delete, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

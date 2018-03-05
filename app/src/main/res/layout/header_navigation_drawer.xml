@@ -10,7 +10,7 @@
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cipriano"
+        android:id="@+id/tvDrawer"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
         android:textColor="#FFF"
