@@ -1,5 +1,6 @@
 package com.untitledev.monitoreofamiliar.activities;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.SyncStateContract;
@@ -120,6 +121,7 @@ public class LoginActivity extends AppCompatActivity{
                             switch (response.getHttpCode()){
                                 case 200:
                                 case 201:
+
                                     appPreferences.saveOnPreferenceString(getApplicationContext(), Constants.PREFERENCE_NAME_GENERAL, Constants.PREFERENCE_KEY_USER, response.getBodyString());
                                     goToHome();
                                     break;

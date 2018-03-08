@@ -36,7 +36,7 @@ public class MethodPOST extends AsyncTask<String, String, Response> {
     protected Response doInBackground(String... vars) {
         String sURL = vars[0];
         String mBody = vars[1];
-        Log.i("Monitoreo Method POST", sURL);
+        Log.i("Monitoreo Method POST", host + sURL);
         Log.i("Monitoreo Method POST", mBody);
 
         HttpURLConnection hURLConnection = null;

@@ -1,5 +1,7 @@
 package com.untitledev.monitoreofamiliar.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -50,6 +52,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+
         CONTEXT_MAIN = HomeActivity.this;
         appPreferences = new ApplicationPreferences();
         mResponse = new Response();
@@ -59,6 +64,19 @@ public class HomeActivity extends AppCompatActivity {
             ID = jsonObject.getInt("id");
             NAME = jsonObject.getString("name");
             Log.i("ID", ""+ID+" NAME:"+NAME);
+            Bundle userData = new Bundle();
+            userData.putInt("id", ID);
+            userData.putString("name", NAME);
+
+            AccountManager accountManager = AccountManager.get(this); //this is Activity
+            Account account = new Account("MonitoreoFamiliarAccount","com.untitled.monitoreofamiliar.MonitoreoFamiliar");
+            boolean success = accountManager.addAccountExplicitly(account,"password", userData);
+            if(success){
+                Log.i("MonitoreoFamiliarTag","Account created");
+            }else{
+                Log.i("MonitoreoFamiliarTag","Account creation failed. Look at previous logs to investigate");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

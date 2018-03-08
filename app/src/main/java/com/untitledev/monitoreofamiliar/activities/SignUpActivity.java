@@ -55,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_up);
         bindUI();
         appPreferences = new ApplicationPreferences();
-        etSignUpPhone.setText(DeviceProperties.getPhoneNumber(getApplicationContext()));
+        //etSignUpPhone.setText(DeviceProperties.getPhoneNumber(getApplicationContext()));
         //etSignUpCountryCode.setText(DeviceProperties.getCountryCode(getApplicationContext()));
         btnSignUp.setOnClickListener(this);
         btnSignUpCancel.setOnClickListener(this);

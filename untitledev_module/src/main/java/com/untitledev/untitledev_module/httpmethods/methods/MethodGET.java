@@ -29,7 +29,7 @@ public class MethodGET extends AsyncTask<String, String, Response> {
     @Override
     protected Response doInBackground(String... vars) {
         String sURL = vars[0];
-        Log.i("Monitoreo Method GET", sURL);
+        Log.i("Monitoreo Method GET", host + sURL);
         HttpURLConnection hURLConnection = null;
         Response mResponse = new Response();
         try {
