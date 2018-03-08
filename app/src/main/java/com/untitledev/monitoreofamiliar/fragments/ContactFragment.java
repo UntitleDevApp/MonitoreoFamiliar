@@ -102,24 +102,24 @@ public class ContactFragment extends Fragment implements ContactsService.Contact
                             Gson gson = new Gson();
                             //listContact = new ArrayList<>();
                             JSONObject jResponse = new JSONObject(response.getBodyString());
-                            JSONArray jaContacts = jResponse.getJSONArray("data");
-                            Contact[] items = gson.fromJson(jaContacts.toString(), Contact[].class);
-                            //for (int index = 0; index<jaContacts.length(); index++){
-                                //listContact.add(gson.fromJson(jaContacts.get(index).toString(), Contact.class));
-                            //}
-                            contactAdapter.addItems(Arrays.asList(items));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                JSONArray jaContacts = jResponse.getJSONArray("data");
+                Contact[] items = gson.fromJson(jaContacts.toString(), Contact[].class);
+                //for (int index = 0; index<jaContacts.length(); index++){
+                //listContact.add(gson.fromJson(jaContacts.get(index).toString(), Contact.class));
+                //}
+                contactAdapter.addItems(Arrays.asList(items));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
                         break;
                     case 204:
-                        //EMPTY
-                        break;
+                            //EMPTY
+                            break;
                     case 404:
-                        break;
-                    default:
-                }
+                            break;
+            default:
+        }
             }
 
             @Override

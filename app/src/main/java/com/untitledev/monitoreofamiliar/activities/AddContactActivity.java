@@ -3,9 +3,12 @@ package com.untitledev.monitoreofamiliar.activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -158,26 +161,13 @@ public class AddContactActivity extends AppCompatActivity implements View.OnClic
                 addContact(phone, name, lastName);
                 break;
             case R.id.btnAddContactCancel:
-                Contact contact = new Contact();
-                /*String stringDate = Functions.getCurrentDate();
-                Log.i("String Date: ", ""+stringDate);
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                Date date = format.parse(stringDate);*/
-                /*String dtStart = Functions.getCurrentDate();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                try {
-                    Date date = format.parse(dtStart);
-                    Log.i("String Date: ", ""+date);
-                    contact.setCreationDate(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }*/
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
                 break;
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request it is that we're responding to
@@ -201,9 +191,10 @@ public class AddContactActivity extends AppCompatActivity implements View.OnClic
                 // Retrieve the phone number from the NUMBER column
                 int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                 String number = cursor.getString(column);
+                //sPhoneNumberUtils.normalizeNumber(number);
                 int columName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
                 String name = cursor.getString(columName);
-                etAddContactPhone.setText(number);
+                etAddContactPhone.setText(PhoneNumberUtils.normalizeNumber(number));
                 etAddContactName.setText(name);
                 // Do something with the phone number...
             }

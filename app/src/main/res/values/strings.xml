@@ -39,6 +39,10 @@
     <string name="message_error_saving">Error saving</string>
 
     <string name="message_delete">Deleted...!</string>
+    <string name="message_permission">Allow this user to view your location</string>
+    <string name="message_permission_title">Share location</string>
+    <string name="message_permission_cancel">Don\'t Share</string>
+    <string name="message_permission_accept">Share</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

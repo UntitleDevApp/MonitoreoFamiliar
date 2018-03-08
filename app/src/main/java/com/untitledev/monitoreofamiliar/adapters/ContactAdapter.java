@@ -1,7 +1,11 @@
 package com.untitledev.monitoreofamiliar.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +68,11 @@ public class ContactAdapter extends BaseAdapter {
         switchPermission.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(ContactAdapter.this.context, "Hola" + isChecked, Toast.LENGTH_SHORT).show();
+                if(isChecked){
+                    confirmPermissions();
+                }else {
+
+                }
             }
         });
         return convertView;
@@ -86,5 +94,25 @@ public class ContactAdapter extends BaseAdapter {
         private ImageView imageViewContact;
         private TextView textViewContact;
         private Switch switchPermission;
+    }
+
+    private void confirmPermissions(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage(R.string.message_permission)
+                .setTitle(R.string.message_permission_title)
+                .setCancelable(false)
+                .setNegativeButton(R.string.message_permission_cancel, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+
+                    }
+                })
+                .setPositiveButton(R.string.message_permission_accept,
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+
+                            }
+                        });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }

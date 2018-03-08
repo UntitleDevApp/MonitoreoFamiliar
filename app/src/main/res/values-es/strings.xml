@@ -40,5 +40,9 @@
     <string name="message_duplicate">"El número de teléfono utilizado ya ha sido registrado, intenta otro por favor "</string>
     <string name="have_code">Tengo un código</string>
     <string name="message_delete">Eliminado...!</string>
+    <string name="message_permission">Permitir a este usuario ver tu localización</string>
+    <string name="message_permission_title">Compartir localización</string>
+    <string name="message_permission_cancel">No compartir</string>
+    <string name="message_permission_accept">Compartir</string>
 
 </resources>
