@@ -214,30 +214,34 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
         String phone = etSignUpPhone.getText().toString();
-        CharSequence test = "     ";
-        Log.i("CustomTag", "Empty: "+ (test.length()==0) );
-        if (Functions.isEmptyString(phone)){
-            Toast.makeText(getApplicationContext(), R.string.message_empty_input, Toast.LENGTH_SHORT).show();
-        }else {
+
             switch (v.getId()) {
                 case R.id.btnSignUp:
-                    String name = etSignUpName.getText().toString();
-                    String lastName = etSignUpLastName.getText().toString();
-                    String email = etSignUpEmail.getText().toString();
-                    addUser(name, lastName, phone, email);
+                    if (!Functions.isEmptyString(phone)){
+                        String name = etSignUpName.getText().toString();
+                        String lastName = etSignUpLastName.getText().toString();
+                        String email = etSignUpEmail.getText().toString();
+                        addUser(name, lastName, phone, email);
+
+                    }else
+                        Toast.makeText(getApplicationContext(), R.string.message_empty_input, Toast.LENGTH_SHORT).show();
+
                     break;
                 case R.id.btnSignUpCancel:
-                    mIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                    //mIntent.putExtra("phone", phone);
-                    startActivity(mIntent);
-                    this.finish();
+                    if (!Functions.isEmptyString(phone)) {
+                        mIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        //mIntent.putExtra("phone", phone);
+                        startActivity(mIntent);
+                        this.finish();
+                    }else
+                        Toast.makeText(getApplicationContext(), R.string.message_empty_input, Toast.LENGTH_SHORT).show();
                     break;
 
                 case R.id.ibPhone:
                     requestHint();
                 default:
             }
-        }
+
     }
 
     @Override

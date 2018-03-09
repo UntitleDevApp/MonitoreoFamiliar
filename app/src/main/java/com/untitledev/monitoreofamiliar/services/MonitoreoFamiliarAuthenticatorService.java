@@ -18,7 +18,7 @@ import java.net.Authenticator;
 
 public class MonitoreoFamiliarAuthenticatorService extends Service {
     private static final String TAG = "MonitoreoFamiliarTag";
-    public static final String ACCOUNT_NAME = "AccountMonitoreoFamiliar";
+    public static final String ACCOUNT_NAME = "MonitoreoFamiliarAccount";
     private MonitoreoFamiliarAuthenticator mAuthenticator;
 
     /**

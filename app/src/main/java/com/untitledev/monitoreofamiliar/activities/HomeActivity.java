@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
             userData.putString("name", NAME);
 
             AccountManager accountManager = AccountManager.get(this); //this is Activity
-            Account account = new Account("MonitoreoFamiliarAccount","com.untitled.monitoreofamiliar.MonitoreoFamiliar");
+            Account account = new Account("MonitoreoFamiliarAccount","com.untitledev.monitoreofamiliar.MonitoreoFamiliarAccount");
             boolean success = accountManager.addAccountExplicitly(account,"password", userData);
             if(success){
                 Log.i("MonitoreoFamiliarTag","Account created");
